@@ -123,13 +123,14 @@ export default function TodoList({ todos, setTodos, projects, currentDate }: Tod
 
   return (
     <>
-      <Card>
-        <CardHeader>
-          <CardTitle>Active Tasks</CardTitle>
-          <CardDescription>Your currently active tasks and to-dos</CardDescription>
+      <Card className="shadow-sm">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-lg sm:text-xl">Active Tasks</CardTitle>
+          <CardDescription className="text-sm">Your currently active tasks and to-dos</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex space-x-2">
+          {/* Mobile-optimized input section */}
+          <div className="space-y-3 sm:space-y-0 sm:flex sm:space-x-2">
             <Input
               placeholder="Add a new task..."
               value={newTodoText}
@@ -137,45 +138,48 @@ export default function TodoList({ todos, setTodos, projects, currentDate }: Tod
               onKeyDown={(e) => {
                 if (e.key === "Enter") addTodo()
               }}
-              className="flex-1"
+              className="flex-1 h-10 sm:h-9"
             />
-            <Select value={newTodoProject} onValueChange={setNewTodoProject}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Project" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="none">No Project</SelectItem>
-                {activeProjects.map((project) => (
-                  <SelectItem key={project.id} value={project.id}>
-                    {project.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Button onClick={addTodo} size="icon">
-              <Plus className="h-4 w-4" />
-            </Button>
+            <div className="flex space-x-2">
+              <Select value={newTodoProject} onValueChange={setNewTodoProject}>
+                <SelectTrigger className="w-full sm:w-[140px] h-10 sm:h-9">
+                  <SelectValue placeholder="Project" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">No Project</SelectItem>
+                  {activeProjects.map((project) => (
+                    <SelectItem key={project.id} value={project.id}>
+                      {project.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Button onClick={addTodo} size="icon" className="h-10 w-10 sm:h-9 sm:w-9 shrink-0">
+                <Plus className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
 
           <div className="space-y-2">
             {visibleTodos.length === 0 ? (
-              <div className="text-center text-muted-foreground py-8">
-                <p>No active tasks for today.</p>
-                <p className="text-sm mt-2">Add a task above or activate tasks from your Task Pool.</p>
+              <div className="text-center text-muted-foreground py-8 px-4">
+                <p className="text-sm sm:text-base">No active tasks for today.</p>
+                <p className="text-xs sm:text-sm mt-2">Add a task above or activate tasks from your Task Pool.</p>
               </div>
             ) : (
               visibleTodos.map((todo) => (
                 <div
                   key={todo.id}
-                  className="flex items-center justify-between p-3 border rounded-lg hover:bg-accent/50 transition-colors"
+                  className="flex items-start sm:items-center justify-between p-3 sm:p-4 border rounded-lg hover:bg-accent/50 transition-colors"
                 >
-                  <div className="flex items-center space-x-3 flex-1">
+                  <div className="flex items-start sm:items-center space-x-3 flex-1 min-w-0">
                     <Checkbox
                       id={`todo-${todo.id}`}
                       checked={todo.completed}
                       onCheckedChange={() => toggleTodo(todo.id)}
+                      className="mt-0.5 sm:mt-0 shrink-0"
                     />
-                    <div className="flex flex-col flex-1">
+                    <div className="flex flex-col flex-1 min-w-0">
                       {editingId === todo.id ? (
                         <Input
                           value={editText}
@@ -193,14 +197,14 @@ export default function TodoList({ todos, setTodos, projects, currentDate }: Tod
                           <div className="flex items-center space-x-2">
                             <label
                               htmlFor={`todo-${todo.id}`}
-                              className={`text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer ${
+                              className={`text-sm sm:text-base font-medium leading-snug cursor-pointer break-words ${
                                 todo.completed ? "line-through text-muted-foreground" : ""
                               }`}
                               onClick={() => setSelectedTaskId(todo.id)}
                             >
                               {todo.text}
                             </label>
-                            {todo.notes && <FileText className="h-3 w-3 text-muted-foreground" />}
+                            {todo.notes && <FileText className="h-3 w-3 text-muted-foreground shrink-0" />}
                           </div>
                           {todo.projectId && (
                             <Badge variant="outline" className="text-xs w-fit">
@@ -211,7 +215,7 @@ export default function TodoList({ todos, setTodos, projects, currentDate }: Tod
                       )}
                     </div>
                   </div>
-                  <div className="flex space-x-1">
+                  <div className="flex space-x-1 shrink-0 ml-2">
                     {editingId !== todo.id && (
                       <Button
                         variant="ghost"
@@ -236,7 +240,7 @@ export default function TodoList({ todos, setTodos, projects, currentDate }: Tod
             )}
           </div>
         </CardContent>
-        <CardFooter className="text-xs text-muted-foreground">
+        <CardFooter className="text-xs text-muted-foreground pt-4">
           {visibleTodos.filter((t) => t.completed).length} of {visibleTodos.length} active tasks completed
         </CardFooter>
       </Card>

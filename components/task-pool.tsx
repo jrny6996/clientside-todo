@@ -7,8 +7,9 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Trash2, Play, Pencil, FileText, Archive } from "lucide-react"
+import { Trash2, Play, Pencil, FileText, Archive, Filter } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
+import { Label } from "@/components/ui/label"
 import TaskDetailModal from "@/components/task-detail-modal"
 
 interface TaskPoolProps {
@@ -91,19 +92,25 @@ export default function TaskPool({ todos, setTodos, projects, currentDate }: Tas
 
   return (
     <>
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+      <Card className="shadow-sm">
+        <CardHeader className="pb-4">
+          <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
             <Archive className="h-5 w-5" />
             Task Pool
           </CardTitle>
-          <CardDescription>Manage all your tasks - activate them when you're ready to work</CardDescription>
+          <CardDescription className="text-sm">
+            Manage all your tasks - activate them when you're ready to work
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex items-center space-x-2">
-            <span className="text-sm font-medium">Filter by project:</span>
+          {/* Mobile-optimized filter */}
+          <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-2">
+            <div className="flex items-center space-x-2">
+              <Filter className="h-4 w-4 text-muted-foreground" />
+              <Label className="text-sm font-medium whitespace-nowrap">Filter by project:</Label>
+            </div>
             <Select value={filterProject} onValueChange={setFilterProject}>
-              <SelectTrigger className="w-[200px]">
+              <SelectTrigger className="w-full sm:w-[200px] h-9">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -120,15 +127,18 @@ export default function TaskPool({ todos, setTodos, projects, currentDate }: Tas
 
           {activeTasks.length > 0 && (
             <div className="space-y-2">
-              <h3 className="text-sm font-semibold text-green-700 dark:text-green-400">Active Tasks</h3>
+              <h3 className="text-sm font-semibold text-green-700 dark:text-green-400 flex items-center gap-2">
+                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                Active Tasks ({activeTasks.length})
+              </h3>
               {activeTasks.map((todo) => (
                 <div
                   key={todo.id}
-                  className="flex items-center justify-between p-3 border rounded-lg bg-green-50 dark:bg-green-950/20 hover:bg-green-100 dark:hover:bg-green-950/30 transition-colors"
+                  className="flex items-start sm:items-center justify-between p-3 sm:p-4 border rounded-lg bg-green-50 dark:bg-green-950/20 hover:bg-green-100 dark:hover:bg-green-950/30 transition-colors"
                 >
-                  <div className="flex items-center space-x-3 flex-1">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <div className="flex flex-col flex-1">
+                  <div className="flex items-start sm:items-center space-x-3 flex-1 min-w-0">
+                    <div className="w-2 h-2 bg-green-500 rounded-full shrink-0 mt-2 sm:mt-0"></div>
+                    <div className="flex flex-col flex-1 min-w-0">
                       {editingId === todo.id ? (
                         <Input
                           value={editText}
@@ -145,12 +155,12 @@ export default function TaskPool({ todos, setTodos, projects, currentDate }: Tas
                         <div className="space-y-1">
                           <div className="flex items-center space-x-2">
                             <span
-                              className="text-sm font-medium cursor-pointer"
+                              className="text-sm sm:text-base font-medium cursor-pointer break-words"
                               onClick={() => setSelectedTaskId(todo.id)}
                             >
                               {todo.text}
                             </span>
-                            {todo.notes && <FileText className="h-3 w-3 text-muted-foreground" />}
+                            {todo.notes && <FileText className="h-3 w-3 text-muted-foreground shrink-0" />}
                           </div>
                           {todo.projectId && (
                             <Badge variant="outline" className="text-xs w-fit">
@@ -161,7 +171,7 @@ export default function TaskPool({ todos, setTodos, projects, currentDate }: Tas
                       )}
                     </div>
                   </div>
-                  <div className="flex space-x-1">
+                  <div className="flex space-x-1 shrink-0 ml-2">
                     <Button
                       variant="ghost"
                       size="icon"
@@ -197,15 +207,18 @@ export default function TaskPool({ todos, setTodos, projects, currentDate }: Tas
 
           {inactiveTasks.length > 0 && (
             <div className="space-y-2">
-              <h3 className="text-sm font-semibold text-muted-foreground">Inactive Tasks</h3>
+              <h3 className="text-sm font-semibold text-muted-foreground flex items-center gap-2">
+                <div className="w-2 h-2 bg-muted-foreground rounded-full"></div>
+                Inactive Tasks ({inactiveTasks.length})
+              </h3>
               {inactiveTasks.map((todo) => (
                 <div
                   key={todo.id}
-                  className="flex items-center justify-between p-3 border rounded-lg hover:bg-accent/50 transition-colors opacity-75"
+                  className="flex items-start sm:items-center justify-between p-3 sm:p-4 border rounded-lg hover:bg-accent/50 transition-colors opacity-75"
                 >
-                  <div className="flex items-center space-x-3 flex-1">
-                    <div className="w-2 h-2 bg-muted-foreground rounded-full"></div>
-                    <div className="flex flex-col flex-1">
+                  <div className="flex items-start sm:items-center space-x-3 flex-1 min-w-0">
+                    <div className="w-2 h-2 bg-muted-foreground rounded-full shrink-0 mt-2 sm:mt-0"></div>
+                    <div className="flex flex-col flex-1 min-w-0">
                       {editingId === todo.id ? (
                         <Input
                           value={editText}
@@ -222,12 +235,12 @@ export default function TaskPool({ todos, setTodos, projects, currentDate }: Tas
                         <div className="space-y-1">
                           <div className="flex items-center space-x-2">
                             <span
-                              className="text-sm font-medium cursor-pointer"
+                              className="text-sm sm:text-base font-medium cursor-pointer break-words"
                               onClick={() => setSelectedTaskId(todo.id)}
                             >
                               {todo.text}
                             </span>
-                            {todo.notes && <FileText className="h-3 w-3 text-muted-foreground" />}
+                            {todo.notes && <FileText className="h-3 w-3 text-muted-foreground shrink-0" />}
                           </div>
                           {todo.projectId && (
                             <Badge variant="outline" className="text-xs w-fit">
@@ -238,7 +251,7 @@ export default function TaskPool({ todos, setTodos, projects, currentDate }: Tas
                       )}
                     </div>
                   </div>
-                  <div className="flex space-x-1">
+                  <div className="flex space-x-1 shrink-0 ml-2">
                     <Button
                       variant="ghost"
                       size="icon"
@@ -273,12 +286,12 @@ export default function TaskPool({ todos, setTodos, projects, currentDate }: Tas
           )}
 
           {allTasks.length === 0 && (
-            <p className="text-center text-muted-foreground py-8">
+            <p className="text-center text-muted-foreground py-8 px-4 text-sm">
               No tasks found. Create some tasks in your projects or add standalone tasks.
             </p>
           )}
         </CardContent>
-        <CardFooter className="text-xs text-muted-foreground">
+        <CardFooter className="text-xs text-muted-foreground pt-4">
           {activeTasks.length} active • {inactiveTasks.length} inactive • {allTasks.length} total tasks
         </CardFooter>
       </Card>

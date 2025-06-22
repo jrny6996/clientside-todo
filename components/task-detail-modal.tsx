@@ -43,13 +43,13 @@ export default function TaskDetailModal({ task, projects, open, onClose, onUpdat
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>Task Details</DialogTitle>
-          <DialogDescription>View and edit task information and notes</DialogDescription>
+      <DialogContent className="sm:max-w-md mx-4 max-h-[90vh] overflow-y-auto">
+        <DialogHeader className="space-y-2">
+          <DialogTitle className="text-lg">Task Details</DialogTitle>
+          <DialogDescription className="text-sm">View and edit task information and notes</DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-4">
+        <div className="space-y-4 py-2">
           <div className="flex items-center space-x-2">
             <Checkbox
               id="task-completed"
@@ -62,22 +62,27 @@ export default function TaskDetailModal({ task, projects, open, onClose, onUpdat
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="task-title">Task Title</Label>
+            <Label htmlFor="task-title" className="text-sm font-medium">
+              Task Title
+            </Label>
             <Input
               id="task-title"
               value={editedTask.text}
               onChange={(e) => setEditedTask({ ...editedTask, text: e.target.value })}
               placeholder="Enter task title..."
+              className="h-10"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="task-project">Project</Label>
+            <Label htmlFor="task-project" className="text-sm font-medium">
+              Project
+            </Label>
             <Select
               value={editedTask.projectId || ""}
               onValueChange={(value) => setEditedTask({ ...editedTask, projectId: value || undefined })}
             >
-              <SelectTrigger>
+              <SelectTrigger className="h-10">
                 <SelectValue placeholder="Select a project or leave blank" />
               </SelectTrigger>
               <SelectContent>
@@ -92,17 +97,20 @@ export default function TaskDetailModal({ task, projects, open, onClose, onUpdat
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="task-notes">Notes</Label>
+            <Label htmlFor="task-notes" className="text-sm font-medium">
+              Notes
+            </Label>
             <Textarea
               id="task-notes"
               value={editedTask.notes || ""}
               onChange={(e) => setEditedTask({ ...editedTask, notes: e.target.value })}
               placeholder="Add any additional notes or details..."
               rows={4}
+              className="resize-none"
             />
           </div>
 
-          <div className="flex items-center justify-between text-sm text-muted-foreground">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0 text-sm text-muted-foreground pt-2 border-t">
             <div className="flex items-center space-x-2">
               <Calendar className="h-4 w-4" />
               <span>Created: {new Date(editedTask.timestamp).toLocaleDateString()}</span>
@@ -118,11 +126,13 @@ export default function TaskDetailModal({ task, projects, open, onClose, onUpdat
           </div>
         </div>
 
-        <DialogFooter className="flex flex-col sm:flex-row sm:justify-between gap-2 sm:gap-0">
-          <Button variant="outline" onClick={onClose}>
+        <DialogFooter className="flex flex-col sm:flex-row gap-2 sm:gap-0 sm:justify-between pt-4">
+          <Button variant="outline" onClick={onClose} className="h-10">
             Cancel
           </Button>
-          <Button onClick={handleSave}>Save Changes</Button>
+          <Button onClick={handleSave} className="h-10">
+            Save Changes
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
